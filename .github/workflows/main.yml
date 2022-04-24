@@ -1,0 +1,38 @@
+name: Event Reminder [CRON - DAILY]
+
+on:
+  workflow_dispatch:
+  # Scheduled to run everyday all year at 3:30 UTC. i.e., 9:00 IST : )
+  schedule:
+    - cron: "30 3 */1 */1 *" 
+
+jobs:
+  
+  run-py-script:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      # setup python in runner environment
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.7
+      # Install required dependencies for python script to run properly
+      - name: Install Dependencies
+        run: |
+          pip install pandas
+      # run the python script which checks for events from Events.csv and sends mail if there are any.
+      - name: run python script
+        run: |
+          export SENDER_EMAIL_ID="${{ secrets.SENDER_EMAIL_ID }}"
+          export SENDER_EMAIL_PASSWORD="${{ secrets.SENDER_EMAIL_PASSWORD }}"
+          export NOTIFICATION_SUBSCRIBERS="${{ secrets.NOTIFICATION_SUBSCRIBERS }}"
+          python email-reminder.py
+      # Run cleanup step always, even if one or more steps fails above.
+        if: always()
+      - name: Cleanup
+        run: |
+          rm -rf ./*
