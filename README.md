@@ -6,7 +6,8 @@ Reminds me of Birthdays, events via email to one or more persons. [As declared i
 2. Edit `Events.csv` to add as many events as you wish and save it. Update whenever needed too. (**Don't change column structure or names, otherwise code changes are needed.**)
 3. Add the following `repository level secrets` to your forked repository. [Python scripts need these to send email, workflow `main.yml` supplies the same as env variables to python script]
 
-   - `SENDER_EMAIL_ID` --> The email_id from which you want to send the reminder emails from. (Probably one of your own) 
+   - `SENDER_EMAIL_ID` --> The email_id from which you want to send the reminder emails from. (Probably one of your own)
+      - Ex : `youremailaddress@gmail.com`
    - `SENDER_EMAIL_PASSWORD` --> The login password for the above email_id. [Generated App password for gmail]
      
      > Using just the email password Works for most email providers.
@@ -15,7 +16,8 @@ Reminds me of Birthdays, events via email to one or more persons. [As declared i
      > OR
      > 2. Enable 2 Factor authentication in your google account, **Generate an app password for gmail, use the same as password and paste it as secret for `SENDER_EMAIL_PASSWORD`** (App password must included spaces too!!). [Secure, Recommended]
 
-   - `NOTIFICATION_SUBSCRIBERS` --> The email_id or array of email_ids who wants to receive these reminder emails.
+   - `NOTIFICATION_SUBSCRIBERS` --> A single email_id or comma separated string of email_ids who wants to receive these reminder emails.
+      - Ex : `reciever.address@gmail.com` or `reciever1.address@gmail.com,reciever2.address@yahoo.com`
 
 **That's It!! Now you will never forget a special day 🍰!!**
 
