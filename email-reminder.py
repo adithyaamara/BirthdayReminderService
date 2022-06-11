@@ -7,7 +7,7 @@ import smtplib, ssl
 sender_email_id = os.getenv('SENDER_EMAIL_ID')
 sender_email_passwd = os.getenv('SENDER_EMAIL_PASSWORD')
 # > Note : Less secure apps are no more supported by gmail. Use an app password instead of actual mail password.
-subscribers = os.getenv('NOTIFICATION_SUBSCRIBERS')
+subscribers = str(os.getenv('NOTIFICATION_SUBSCRIBERS')).split(',')
 port = 587  # For SSL
 
 # Create a secure SSL context
