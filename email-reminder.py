@@ -1,43 +1,30 @@
 import pandas as pd
-import datetime
-import os
-import smtplib, ssl
+from datetime import datetime as dt
+from email_client import EmailClient
 
-# Read Required Environment variables
-sender_email_id = os.getenv('SENDER_EMAIL_ID')
-sender_email_passwd = os.getenv('SENDER_EMAIL_PASSWORD')
-# > Note : Less secure apps are no more supported by gmail. Use an app password instead of actual mail password.
-subscribers = str(os.getenv('NOTIFICATION_SUBSCRIBERS')).split(',')
-port = 587  # For SSL
-
-# Create a secure SSL context
-context = ssl.create_default_context()
-server = smtplib.SMTP("smtp.gmail.com",port)
-server.ehlo()
-server.starttls(context=context) # Secure the connection
-server.ehlo()
-
-# Login to server
-server.login(sender_email_id, sender_email_passwd)
+mail_client = EmailClient()     # Initialize email mechanism.
 subject = "[Notification] - Event Reminder service"  # The Subject line for this service mails.
+
 # Read the csv file having events and fill undeclared values with None
-events = pd.read_csv('Events.csv',).fillna("None")
+events = pd.read_csv('Events.csv').fillna("None")
 
-todays_events = []  # Holds indices of above data frame where event is today.
+# Drop rows where DATE field is None
+events = events[events.DATE != "None"].reset_index()
 
-for i in range(len(events)):
-    row = events.iloc[i]
-    if row.DATE != "None" and int(datetime.datetime.now().month) == int(str(row.DATE)[str(row.DATE).index('-')+1:]) and int(datetime.datetime.now().day) == int(str(row.DATE)[:str(row.DATE).index('-')]):
-        print(row)
-        todays_events.append(i)
+# filter events happening today
+current_day = '{:02d}'.format(dt.now().day)       # Current day in 2 digit string format.
+current_month = '{:02d}'.format(dt.now().month)   # Current month in 2 digit string format.
+events = events[events.DATE == f"{current_day}-{current_month}"]    # Filter by today's date.
 
-if len(todays_events) == 0:
+if len(events) == 0:
     message = "There are no Events Today!!!"
 else:
     message = ''
-    for i in range(len(todays_events)):
-        message = message + f"{events.iloc[todays_events[i]].NAME} is celebrating his / her {events.iloc[todays_events[i]].EVENT_NAME} today!!!!\n"
+    for i in range(len(events)):
+        message = message + f"{events.iloc[i].NAME} is celebrating his / her {events.iloc[i].EVENT_NAME} today!!!!\n"
 print(message)
-message = 'Subject: {}\n\n{}'.format(subject, message)  # form message with subject and body.
-server.sendmail(sender_email_id, subscribers, message)
-server.quit()
+
+# Send Email
+mail_client.SendMail_Wrapper(Subject=subject, Message=message)
+# Release SMTP Connection
+mail_client.release_connection_wrapper()
