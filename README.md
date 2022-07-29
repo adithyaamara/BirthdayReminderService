@@ -1,5 +1,12 @@
 # BirthDay Reminder Service
-Reminds me of Birthdays, events via email to one or more persons. [As declared in `Events.csv`]
+Reminds Birthdays, events via email to one or more persons. [As declared in `Events.csv`]
+
+# Features
+1. Send Daily email reminders about today's special events. (Based on data present in `Events.csv`)
+   - Today Events
+   - Tomorrow Events Heads Up (If any applicable)
+   - Heads up of events in current month
+2. Send Automatic personalized greeting emails to the person whose email ID is avaialble in `Events.csv`.
 
 # Setup
 1. Just fork 🍴 this repo.
