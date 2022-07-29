@@ -1,3 +1,4 @@
-NAME,EVENT_NAME,DATE,STATUS
-Person1,Birthyday,23-04,VERIFIED
-Person2,Marriage Anniversery,23-04,VERIFIED
+NAME,EVENT_NAME,DATE,EMAIL,STATUS
+Person1,Birthyday,23-04,person1@gmail.com,VERIFIED
+Person2,Marriage Anniversery,23-04,person2@hotmail.com,VERIFIED
+
